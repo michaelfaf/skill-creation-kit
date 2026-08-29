@@ -150,7 +150,14 @@ AIs under-trigger skills, so write it slightly pushy. Third person, start with "
 
 ### 6c — Install it where the platform finds it
 
-Follow the install record's discovery choice, then **verify the skill actually resolves** — an unresolvable install is the single most common way a finished skill silently never runs. `references/skill-anatomy.md` has the per-platform paths and the verification command for each.
+Follow the install record's discovery choice. The four shapes it can take:
+
+- **A native skills directory** — put the folder there (or, if the canonical copy lives in the workspace, symlink it there under the bare skill name).
+- **A routing line** — the skill folder stays in the workspace, and you **add a line to the instructions file the install record names**, pointing at this skill's `SKILL.md` path and listing the same trigger phrases as its description. Use the file the record names; don't invent a new one per skill unless the record says that's the convention. A skill nothing routes to is invisible, so this step *is* the install.
+- **Both** — do both; the redundancy is cheap.
+- **Paste-in** — no install action beyond filing it where the user can find it from the index.
+
+Then **verify the skill actually resolves** — an unresolvable install is the single most common way a finished skill silently never runs. `references/skill-anatomy.md` has the per-platform paths and the verification command for each.
 
 On a paste-in install (no discovery directory at all) there is nothing to resolve; the equivalent check is that the user can find the skill from the index and paste it. Say which check you ran — don't report "verified" without naming what you verified.
 
@@ -203,7 +210,7 @@ Improving a skill that already exists skips the funnel — no Step 0, no tier qu
 
 1. **Read the whole skill first** — `SKILL.md` plus every `references/` and `scripts/` file. Never edit from the description alone; the thing you're about to add is often already three lines down.
 2. **Edit**, judging every change against the same standard this skill builds to: DBS separation, description quality (Step 6b), pointers not copies, under 500 lines.
-3. **Re-run the dry-run gate (8a)** for any change touching workflow order, reference pointers, or the description. Typo-level fixes skip it.
+3. **Re-run the dry-run gate (8a)** for any change touching workflow order, reference pointers, the description, **or the content of a reference the skill relies on** — a Blueprint edit changes the output as surely as a step edit does, and it's the change most often waved through untested. Typo-level fixes skip it.
 4. **Re-verify discovery** (Step 6c) if the folder was renamed or moved.
 5. **Description changed?** Tell the user it only re-registers in a **fresh session** — 8b applies again.
 

@@ -6,7 +6,7 @@ Ask one at a time. Wait for the answer before asking the next. Do not front-load
 
 ---
 
-## Base questions — all tiers (Q1–Q6)
+## Base questions — all tiers (Q1a, Q1b, Q2–Q6)
 
 **Q1a — Task**
 "What specific task should this skill automate? One sentence."
@@ -45,7 +45,7 @@ Ask one at a time. Wait for the answer before asking the next. Do not front-load
 
 **Q7b — Re-runs**
 "If this runs again over something it already produced — the same week, the same document, the same client — should it overwrite, add to what's there, or stop and ask?"
-(Ask this whenever the skill writes anything that persists. A skill that silently overwrites last month's work is the most expensive bug in this whole format, and it never shows up in a first run.)
+(Ask this whenever the skill writes something that persists **or** gets run repeatedly over the same subject — the same client, the same week, the same site. A skill that only drafts a message still has re-run semantics: the second draft should build on the first, not restate it. A skill that silently overwrites last month's work is the most expensive bug in this whole format, and it never shows up in a first run.)
 
 ---
 
