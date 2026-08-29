@@ -204,8 +204,10 @@ Flag any issue with a specific fix. Apply it and re-run the affected gate — no
 
 1. Confirm the skill is at the install path with the right DBS structure, and that discovery resolves (Step 6c's verification).
 2. **Register it in the skills index** (`<skills>/README.md`): one row — name, one-line purpose, tier, trigger phrase. An unregistered skill is one nobody else on the team knows exists, including a future session of your own AI.
-3. If a companion project folder exists: update its `STATUS.md` to "shipped" and append a session log — date, skill name, tier, DBS layers used, decisions made.
-4. Announce: "`<skill-name>` is live at `<path>`. Structure: SKILL.md [+ references/] [+ scripts/]. Fresh session to acceptance-test it."
+3. **Retire whatever this skill replaced.** If it came from a saved prompt, a snippet or an older skill, replace that file's contents with a single pointer line ("Superseded by the `<skill-name>` skill — see `<path>/SKILL.md`"). Don't delete it and don't leave the old version intact: retired files still get opened, so a pointer redirects whoever goes looking, while a stale original quietly stays the source of truth and a deleted one just gets rewritten from memory.
+4. **Check trigger-phrase parity.** The phrases in the skill's `description` and the phrases in any routing line must be the same phrases. They drift the moment one is edited alone, and the symptom — a skill that fires sometimes — is miserable to diagnose. Read both, out loud, side by side.
+5. If a companion project folder exists: update its `STATUS.md` to "shipped" and append a session log — date, skill name, tier, DBS layers used, decisions made.
+6. Announce: "`<skill-name>` is live at `<path>`. Structure: SKILL.md [+ references/] [+ scripts/]. Fresh session to acceptance-test it."
 
 ---
 

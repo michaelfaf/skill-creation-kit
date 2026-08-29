@@ -43,6 +43,17 @@ description: A description of what this skill does and when to use it.
 The instructions.
 ```
 
+## Scripts: paths and working directory
+
+A `scripts/` file is the one part of a skill that breaks silently on the wrong platform, and the cause is almost always the working directory. **The session's working directory is wherever the user started it — usually the workspace root, not the skill's folder.** So a skill that says `python3 scripts/estimate.py` works when you test it from inside the skill folder and fails with "No such file or directory" for every real run.
+
+Write script invocations so they don't care where the session sits:
+
+- **Reference the script from the skill folder, not the working directory.** In `SKILL.md`, write the path as it is from the skill's own root and say so explicitly: "run `scripts/estimate.py` — the path is relative to this skill's folder, so resolve it against wherever this `SKILL.md` lives." An agent that knows where it read the file from can resolve that; one given a bare relative path cannot.
+- **On a routed install** (the skill lives in the workspace and an instructions line points at it), the safest form is the full workspace-relative path: `python3 skills/<skill-name>/scripts/estimate.py`. It is uglier and it always works.
+- **State the runtime.** "Run with `python3` (3.9+)" or "run with `node`". Never leave the language to be inferred from the extension — the interpreter may not exist, and the failure appears at the worst moment.
+- **Test the invocation from the workspace root before shipping**, not from the skill folder. That is where it will actually run.
+
 ## Size and layering
 
 The format assumes **progressive disclosure** in three stages, and the sizes follow from it:
