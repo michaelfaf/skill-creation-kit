@@ -79,10 +79,10 @@
 | Did it fire? Was the output right? | _pending_ |
 
 ### Phase 4 — Wrap up
-- [ ] User walked through what's installed and where
-- [ ] Install record in the skills index confirmed complete
-- [ ] **This file copied into the workspace** next to the skills index, as `install-record-STATUS.md` or its decisions folded into the index — it does not survive deleting the kit repo
-- [ ] This file fully ticked; final state recorded
+- [ ] **This file copied into the workspace first** — next to the skills index as `install-record-STATUS.md`, or its decisions folded into the index. It does not survive deleting the kit repo, and nothing else in this phase is unrecoverable
+- [ ] Install record in the skills index confirmed complete — every row, including the literal verification command and the subagent / model-choice row
+- [ ] This file fully ticked; Blockers emptied or what remains stated
+- [ ] User walked through what's installed and where, with the wired instructions file named
 
 ## Blockers
 

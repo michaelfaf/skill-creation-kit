@@ -185,13 +185,12 @@ Build **one real skill the user actually wants**, not a toy. This is the phase t
 
 ## Phase 4 — Wrap
 
-1. **Give `STATUS.md` a home first.** See step 5 — do it now, before the walk-through, because everything else in this phase is recoverable and this isn't.
-2. Walk the user through what's installed and where: the skill, the skills index, the instructions-file wiring (name the file), and the first skill they built.
-3. Tick every phase in `STATUS.md`; empty the Blockers row or state what remains.
-4. **Confirm the install record in `<skills>/README.md` is filled in** — every row, including the verification command and the subagent/model-choice row. That block plus the copied `STATUS.md` are the only things that survive this session, and every future build reads them.
-4. Leave the habit behind, one line: **"The third time you explain the same thing to your AI, that's a skill — and check the index before building, because it might already be one."**
-5. **`STATUS.md`'s home (step 1 above).** It is the resume spine, it lives in this repo, and the next step says the repo is disposable — so copy it to `<skills>/install-record-STATUS.md` (or fold its decisions table into the index's Install record and say you've done so). On a platform with no persistent memory this file is the only thing that remembers how the install went; losing it means the next session re-derives your choices by guessing.
-6. Only then is the kit repo safe to delete. Keeping it for re-reads is also fine — nothing downstream depends on it.
+1. **Give `STATUS.md` a home — do this first.** It is the resume spine, it lives in this kit repo, and step 5 says that repo is disposable. Copy it next to the skills index as `install-record-STATUS.md` (or fold its decisions table into the index's Install record and say you've done so). On a platform with no persistent memory this is the only thing that remembers how the install went; lose it and the next session re-derives every choice by guessing. Everything else in this phase is recoverable — this isn't, so it goes first.
+2. **Confirm the install record in the skills index is complete** — every row, including the literal verification command and the subagent / per-task-model row. That block plus the copied `STATUS.md` are what survive this session, and every future build reads them.
+3. Tick every phase in `STATUS.md`; empty the Blockers row or state plainly what remains.
+4. Walk the user through what's installed and where: the skill, the skills index, the instructions-file wiring (**name the file**), and the first skill they built.
+5. Leave the habit behind, one line: **"The third time you explain the same thing to your AI, that's a skill — and check the index before building, because it might already be one."**
+6. The kit repo is now safe to delete. Keeping it for re-reads is fine too — nothing downstream depends on it.
 
 ## If things go wrong
 
