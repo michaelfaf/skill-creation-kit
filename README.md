@@ -35,10 +35,10 @@ A funnel for turning a workflow you keep explaining to your AI into a **skill**:
 | `IMPLEMENT.md` | The installer script, written to your AI (you can follow it too) |
 | `STATUS.md` | Install progress — scan results, decisions, phase ticks; the resume spine if the session dies |
 | `AGENTS.md` / `CLAUDE.md` | Entry instructions for coding agents that auto-read those files |
-| `skill/SKILL.md` | The skill itself, in portable agent-skill format |
-| `skill/references/tier-routing.md` | How a skill gets sized, and the brainstorming fallback when no brainstorming skill exists |
-| `skill/references/dbs-questions.md` | The interview — six base questions, four more for complex skills |
-| `skill/references/skill-anatomy.md` | The portable format: frontmatter fields and limits, folder rules, per-platform discovery paths, how to verify an install resolves |
+| `skill-creation/SKILL.md` | The skill itself, in portable agent-skill format |
+| `skill-creation/references/tier-routing.md` | How a skill gets sized, and the brainstorming fallback when no brainstorming skill exists |
+| `skill-creation/references/dbs-questions.md` | The interview — six base questions, four more for complex skills |
+| `skill-creation/references/skill-anatomy.md` | The portable format: frontmatter fields and limits, folder rules, per-platform discovery paths, how to verify an install resolves |
 | `templates/SKILLS-INDEX.md` | The skills index the installer creates for you, with the install record |
 | `templates/SKILL-TEMPLATE.md` | A `SKILL.md` skeleton for writing one by hand — see `templates/README.md` for what maps to which decision |
 

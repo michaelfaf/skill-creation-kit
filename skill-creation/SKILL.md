@@ -15,7 +15,7 @@ A single entry point for building any new skill, end to end: gate the idea, size
 
 Every question below exists to decide which of those three layers the skill needs. A skill with a `references/` folder it doesn't need is bloat; a skill missing one hallucinates the thing it should have known.
 
-> **Install-time settings.** Five choices were made when this skill was installed and recorded in the skills index (`<skills>/README.md`, "Install record"). Read that record before Step 6 — it tells you where skills live, whether folders take an ordering prefix, whether complex skills get a companion project folder, how the dry-run gate runs, and how skills get invoked. If the record is missing, ask the user rather than guessing.
+> **Install-time settings.** Six choices were made when this skill was installed and recorded in the skills index (`<skills>/README.md`, "Install record"). Read that record before Step 4 — it tells you where skills live, whether folders take an ordering prefix, whether complex skills get a companion project folder, how the dry-run gate runs, how skills get invoked, and which interview mode to use. If the record is missing, ask the user rather than guessing.
 
 ---
 
@@ -134,9 +134,10 @@ Populate `DESIGN.md` from the Step 4 answers before writing the skill folder —
 
 Read `references/skill-anatomy.md` before writing `SKILL.md` — it holds the portable format rules (frontmatter fields and their limits, the name↔folder rule, file-size limits, the reference-depth rule). Then:
 
-1. **Create the folder.** The folder name must be exactly the skill's `name` value — lowercase letters, digits and hyphens only. If the install record says folders take an ordering prefix, apply it to the folder *and* read the prefix rule in `skill-anatomy.md`: the number never appears in the frontmatter `name`, and the entry in the discovery directory is always the bare name.
+1. **Create the folder.** The folder name must be exactly the skill's `name` value — lowercase letters, digits and hyphens only. If the install record says folders take an ordering prefix, apply it to the folder *and* read the prefix rule in `references/skill-anatomy.md`: the number never appears in the frontmatter `name`, and the entry in the discovery directory is always the bare name.
 2. **Write `SKILL.md`:** frontmatter (`name` + `description`) → 2–3 sentence overview → the step-by-step workflow → pointers to `references/` and `scripts/` at the steps that need them → hard rules at the end. Under 500 lines.
 3. **Write each `references/` file** — only if Q3 = yes. One topic per file. **First check whether that knowledge already exists somewhere in the user's workspace** (a voice guide, a business facts file, an existing skill's reference). If it does, point at it — don't recopy it, or the two drift apart and nobody knows which is current.
+   The same rule applies to the skill's own hard rules: if a constraint already lives in the user's standing instructions file, it applies to this skill anyway — don't restate it. Restating it means that when they change it in one place, the skill quietly keeps enforcing the old version. Only rules *specific to this task* belong in the skill.
 4. **Write each `scripts/` file** — only if Q4 = yes. A script earns its place only when the output must be byte-identical every run or an API must be called; anything the AI can reason out belongs in `SKILL.md`.
 5. **Tier 3, if Q9 surfaced mechanical steps:** if the platform supports subagents with per-task model choice, mark those workflow steps in the new `SKILL.md` for cheap-model dispatch ("dispatch a subagent on your cheapest model for this step — no judgment needed"). If it doesn't, write those steps as ordinary inline steps and say nothing about subagents — a skill that instructs a capability the platform lacks stalls at that line.
 

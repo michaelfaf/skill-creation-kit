@@ -63,7 +63,7 @@ Delegate to a structured brainstorming skill when **all three** are true:
 
 1. Tier is 2 or 3
 2. The user gave no clear analogy to an existing skill ("like X but for Y")
-3. The architecture or interaction is genuinely open — how the skill should behave isn't already obvious
+3. The architecture or interaction is genuinely open. **The test:** can you write the spec block's Direction, Blueprints and Behavior lines right now without inventing anything? If yes, it isn't open — skip brainstorming. If you'd be guessing at any of the three, it is.
 
 Skip brainstorming when: Tier 1 (always) · the user gave a clear analogy · the description is specific enough that the questions will resolve everything.
 

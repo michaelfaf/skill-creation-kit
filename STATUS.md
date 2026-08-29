@@ -39,9 +39,9 @@
 
 ### Phase 2 — Install
 - [ ] `skill-creation` installed where the platform discovers it (or kept as the paste-in document)
-- [ ] Discovery verified — the skill resolves (`ls -lL` through the link, or the platform's equivalent)
+- [ ] Discovery verified using the check for this DP-1 branch (A: `ls -lL` through the link · B: file exists · C: file exists **and** the routing line names its path · D: findable from the index) — record which check ran
 - [ ] `<skills>/README.md` created from the template — library table seeded, Install record filled in with all six decisions
-- [ ] `SKILL-TEMPLATE.md` installed (or declined — record which)
+- [ ] `templates/SKILL-TEMPLATE.md` installed as a loose file, not inside a discovery directory (or declined — record which)
 - [ ] Standing instructions file wired, and the user told which file it landed in
 - [ ] Install paths recorded here
 
@@ -74,6 +74,7 @@
 ### Phase 4 — Wrap up
 - [ ] User walked through what's installed and where
 - [ ] Install record in the skills index confirmed complete
+- [ ] **This file copied into the workspace** (`<skills>/install-record-STATUS.md`) or its decisions folded into the index — it does not survive deleting the kit repo
 - [ ] This file fully ticked; final state recorded
 
 ## Blockers

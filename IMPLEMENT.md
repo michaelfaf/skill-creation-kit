@@ -17,7 +17,7 @@ A **skill** is a folder holding a `SKILL.md` — a written procedure your AI loa
 | **Two test gates** | A **dry-run** (someone with no context follows the new `SKILL.md` cold, including a value check: would an AI without this skill have produced the same thing?) and an **acceptance** run in a fresh session, because most platforms load skill discovery at session start and cannot test their own registration mid-session. |
 | **The index** | Every skill registered in one table, so the library stays known and skills stop being rebuilt by accident. |
 
-The payload is `skill/` (the skill itself — `SKILL.md` plus three references, in the portable agent-skill format) and `templates/` (the skills index and a `SKILL.md` skeleton you install). Two companion docs: `OVERVIEW.md` explains the concepts for the human; `EXAMPLE-SKILL.md` walks one real skill from request to shipped.
+The payload is `skill-creation/` (the skill itself — `SKILL.md` plus three references, in the portable agent-skill format) and `templates/` (the skills index and a `SKILL.md` skeleton you install). Two companion docs: `OVERVIEW.md` explains the concepts for the human; `EXAMPLE-SKILL.md` walks one real skill from request to shipped.
 
 **Vocabulary used below.** *Workspace* — wherever the user's work actually lives: a notes vault, a project folder, a git repo. Not loose files in Downloads. *Discovery directory* — the specific folder a platform scans for skills at session start. *Install record* — the block in the skills index that remembers the six choices below, so future sessions build the same way.
 
@@ -32,7 +32,9 @@ Before any questions, establish and record in `STATUS.md`'s scan table:
      [ -d "$d" ] && echo "FOUND: $d ($(ls -1 "$d" | wc -l | tr -d ' ') entries)" || echo "absent: $d"
    done
    ```
-   Substitute your platform's paths. If you're not sure whether your version supports skills at all, say so plainly rather than guessing — DP-1 has a path for "no native support".
+   Substitute your platform's candidates. **Do not invent a path and install into it** — an install into a directory nothing reads is the failure this whole kit exists to prevent. If the probe finds nothing, that is a finding: record "none" and let DP-1 route you to option C.
+
+   **Cursor specifically:** its rules system (`.cursor/rules/*.mdc`) is the mechanism you can rely on, and it is what DP-1 option C uses. Skills-directory support is version-dependent and not something to guess at — probe `~/.cursor/skills` and `.cursor/skills`, and if neither exists, take option C rather than hunting. C works fully; nothing downstream is degraded by it.
 3. **Where does the user's work live?** A notes vault, a project folder, a git repo, a shared team repo? Is there an existing `skills/`, `prompts/` or `commands/` folder — anything that is already doing this job informally?
 4. **Existing conventions:** does the user have a standing instructions file (`CLAUDE.md`, `AGENTS.md`, `.cursor/rules/`, `GEMINI.md`, `.github/copilot-instructions.md`, a system prompt, a "start here" note)? **Read it.** Phase 2 merges into it, never overwrites. Note the naming style they already use — you'll match it, not replace it.
 5. **Any skills already there?** If the user has skills, read one. It tells you their house style, and Phase 2 shouldn't install a second convention alongside a working one.
@@ -59,7 +61,16 @@ Work through these in order. Record each in `STATUS.md`'s decisions table before
 
 If the user says "whatever you recommend": A if the scan found a native skills directory *and* a shell, B if it found the directory but no shell, C if it found no skills directory but the platform reads an instructions file, D if there's no file access. The default folder is `skills/` at the workspace root — any name is fine, record the one chosen; everything downstream calls it `<skills>`.
 
-**A recipe (do it in Phase 2):** create `<workspace>/skills/`, then for each skill `ln -s "<absolute path to the skill folder>" "<discovery dir>/<skill-name>"` and verify with `ls -lL "<discovery dir>/<skill-name>/SKILL.md"` — the `-L` follows the link, so a wrong target errors instead of printing a plausible line. Absolute paths only; a relative symlink target resolves against the link's directory, not yours.
+**A recipe (do it in Phase 2):** create `<workspace>/skills/`, then for each skill `ln -s "<absolute path to the skill folder>" "<discovery dir>/<skill-name>"`. Absolute paths only — a relative symlink target resolves against the link's directory, not yours.
+
+**Verifying the install — the check differs per branch, and only A uses `ls -lL`:**
+
+| DP-1 | Verify with | Why |
+|---|---|---|
+| **A** | `ls -lL "<discovery dir>/<skill-name>/SKILL.md"` | The `-L` follows the link, so a wrong target errors. Plain `ls -l` prints a healthy-looking line for a *broken* link and exits 0 — that is the trap this catches. |
+| **B** | `ls "<discovery dir>/<skill-name>/SKILL.md"` | No link involved; existence is the whole check. |
+| **C** | `test -f "<path>/SKILL.md" && echo ok` **and** `grep -n "<path>" <rules file>` | Two halves: the skill exists, *and* the routing line actually names its path. A skill nothing points at is invisible; a routing line pointing at nothing is worse. |
+| **D** | The user opens the folder and finds the skill from the index. | Nothing to resolve. Say that's the check you ran rather than reporting a verification you didn't do. |
 
 ### DP-2 — Do skill folders take an ordering prefix?
 
@@ -67,9 +78,11 @@ If the user says "whatever you recommend": A if the scan found a native skills d
 - **A. Bare names** — `outreach-drafter/`. *Trade-off:* a folder of thirty skills sorts alphabetically and tells you nothing about what came when.
 - **B. Numbered prefix on the storage folder** — `02 outreach-drafter/`, with the frontmatter `name` and the discovery-directory entry both staying bare. *Trade-off:* you must check the highest number before each build, and the number is meaningless the moment you'd want to reorder (you never renumber — links point at the folder).
 
-**Recommendation:** **B if the user will browse the skills folder as a list** — which is the case when skills live in the workspace next to their notes (DP-1 = A or C), and it's the kit originator's choice: the numbers are creation order, so the folder doubles as a build log. **A if skills live only in a discovery directory the user never opens** (DP-1 = B) — there, the number buys nothing and risks the spec violation below. Default if the user shrugs: B when DP-1 is A or C, A when DP-1 is B or D.
+**Recommendation:** **B only when DP-1 = A.** That is the one configuration where numbering is free: the storage folder carries the number, the bare-named symlink is what the platform sees, and the format's name-matches-folder rule still holds at the point of discovery. It's the kit originator's setup, and the numbers are creation order, so the folder doubles as a build log.
 
-**The rule that makes B safe, either way:** the number lives on the *storage* folder only. The frontmatter `name` is always bare, and the entry in the discovery directory is always bare. The portable skill spec requires the folder name to equal the `name` — a numbered folder placed directly into a discovery directory breaks that, and the skill may simply never load. `skill/references/skill-anatomy.md` states this; if the user picks A, that section still applies to nothing and does no harm.
+**A for every other DP-1 option** — under B the folder *is* the discovery entry, and under C and D the folder name is the only name the skill ever has, so a prefix breaks the name-matches-folder rule everywhere and quietly blocks a later move to a real skills directory. Under C and D you already have an ordered list of every skill: the index table. Use that and keep the folders bare. Default if the user shrugs: B when DP-1 is A, A otherwise.
+
+**The rule that makes B safe:** the number lives on the *storage* folder only. The frontmatter `name` is always bare, and the symlink in the discovery directory is always bare — so the directory the platform actually reads is named exactly the skill's `name`. Put a numbered folder anywhere a platform reads directly and that rule breaks: the skill may never load, and a spec validator will reject it. `skill-creation/references/skill-anatomy.md` states this; if the user picks A, that section applies to nothing and does no harm.
 
 ### DP-3 — Does a complex skill get a companion project folder?
 
@@ -80,7 +93,7 @@ A companion folder (`README` + `STATUS` + `DESIGN`, and for the biggest builds `
 - **B. Tier 3 only** — only skills with scripts, APIs or file output get the folder. *Trade-off:* a heavily-iterated Tier 2 skill (a voice-matching one, typically) has nowhere to record what was tuned.
 - **C. Tier 2 and 3** — the kit originator's setup. *Trade-off:* two folders per skill, and if nobody reads `STATUS.md` they're just clutter.
 
-**Recommendation:** **C if the user already keeps project folders with status files** — the habit exists, the folder gets read, and voice-tuned skills are exactly the ones whose decisions get forgotten. **B if they don't** — start where the payoff is unambiguous, and add Tier 2 later if they find themselves wanting it. **A only if the user is solo, building a handful of simple skills, and says outright they won't read the folder** — an unread status file is worse than none, because it looks authoritative while going stale. Default: C if the scan found existing project/status folders, otherwise B. Record the parent path; the default is `projects/<skill-name>/` in the workspace.
+**Recommendation:** **C if the user already keeps project folders with status files** — the habit exists, the folder gets read, and voice-tuned skills are exactly the ones whose decisions get forgotten. **B if they don't** — start where the payoff is unambiguous, and add Tier 2 later if they find themselves wanting it. **A only if the user is solo, building a handful of simple skills, and says outright they won't read the folder** — an unread status file is worse than none, because it looks authoritative while going stale. Default: **C if the scan found at least one project folder containing a state file** — a `STATUS.md`, `PROGRESS.md`, a running log, anything that gets *updated* rather than written once. A `README.md` on its own doesn't count: it proves they document, not that they maintain. **Otherwise B.** Record the parent path; the default is `projects/<skill-name>/` in the workspace.
 
 ### DP-4 — How does the dry-run gate run?
 
@@ -88,7 +101,7 @@ Every skill gets tested twice: a **dry-run** (someone follows the new `SKILL.md`
 
 **Options:**
 - **A. A fresh subagent** — you launch one, hand it only the new `SKILL.md` and one approved test prompt, and read its output. *Trade-off:* needs a platform that runs subagents.
-- **B. A fresh session the user drives** — the user opens a new chat or composer, pastes only the new `SKILL.md` and one test prompt, and brings the result back. *Trade-off:* a real stop; you wait for them. It is also the *better* test — a genuinely separate context, not a child of yours.
+- **B. A fresh session the user drives** — the user opens a new chat or composer, pastes only the new `SKILL.md` and one test prompt, and brings the result back. *Trade-off:* a real stop; you wait for them. It is also the *better* test — a genuinely separate context, not a child of yours. **What makes it cold is the empty context, not a second person:** a solo operator opening a new composer gets a real cold read, as long as nothing but the `SKILL.md` and the prompt goes into it. Pasting the build conversation along with it turns B into C without anyone noticing.
 - **C. Self-review in the same session** — you re-read the `SKILL.md` you just wrote against the checklist and report. *Trade-off:* you are grading your own work with the whole build still in your context, which is exactly the condition under which a missing step looks obvious to you and invisible to a cold reader.
 
 **Recommendation:** **A if the platform has subagents** — it's free and instant, so it actually gets run. **B if not** — and treat it as a genuine stop: tell the user exactly what to paste and what to ask, then wait. **C only when neither is possible** (and say out loud that the gate is weakened). Default: A if the scan found subagents, else B.
@@ -109,7 +122,9 @@ Every skill gets tested twice: a **dry-run** (someone follows the new `SKILL.md`
 
 **Recommendation:** **C wherever the platform supports both** — automatic triggering is what makes a skill feel like a capability rather than a tool, but an explicit fallback is what saves the day when it doesn't fire and the user knows the skill exists. **A if the platform only matches descriptions, B if it only takes explicit invocation, D if chat-only.** Default: C if the scan found both, else whichever single one exists.
 
-Whichever you pick: the **description discipline in `skill/SKILL.md` Step 6b applies anyway.** Under-triggering is the normal failure mode — descriptions get written as summaries of what the skill does, when they need to be lists of when to use it. And on any platform that loads skills at session start, tell the user now: a skill just installed will not fire in *this* session. That's not a bug and it's why acceptance testing happens in a fresh one.
+**If DP-1 = C (a routing line rather than a skills directory), this is option A in a different costume — record it as "A, via routing rule".** The routing line in the rules file plays the part the description plays elsewhere: the AI reads it every session and matches the user's request against the triggers it names. So the trigger phrases matter *twice* — once in the skill's `description`, once in the routing line — and they should be the same phrases. Adding B on top (a memorable name the user can invoke outright) is cheap and worth it.
+
+Whichever you pick: the **description discipline in `skill-creation/SKILL.md` Step 6b applies anyway.** Under-triggering is the normal failure mode — descriptions get written as summaries of what the skill does, when they need to be lists of when to use it. And on any platform that loads skills at session start, tell the user now: a skill just installed will not fire in *this* session. That's not a bug and it's why acceptance testing happens in a fresh one.
 
 ### DP-6 — How much interview before the build?
 
@@ -123,14 +138,16 @@ Whichever you pick: the **description discipline in `skill/SKILL.md` Step 6b app
 ## Phase 2 — Install
 
 1. **Install the skill** at the DP-1 location, in a folder named exactly `skill-creation`:
-   - **DP-1 = A:** copy `skill/` to `<workspace>/skills/skill-creation/` (with the DP-2 prefix on the folder if prefixes are on), then symlink it into the discovery directory under the bare name and verify with `ls -lL`.
-   - **DP-1 = B:** copy `skill/` straight into the discovery directory as `skill-creation/`.
-   - **DP-1 = C:** copy `skill/` to `<workspace>/skills/skill-creation/`; the routing happens in step 4.
-   - **DP-1 = D:** the user keeps `skill/SKILL.md` and its three references as the documents they paste.
+   - **DP-1 = A:** copy `skill-creation/` to `<workspace>/skills/skill-creation/` (with the DP-2 prefix on the folder if prefixes are on), then symlink it into the discovery directory under the bare name and verify with `ls -lL`.
+   - **DP-1 = B:** copy `skill-creation/` straight into the discovery directory as `skill-creation/`.
+   - **DP-1 = C:** copy `skill-creation/` to `<workspace>/skills/skill-creation/`; the routing happens in step 4.
+   - **DP-1 = D:** the user keeps `skill-creation/SKILL.md` and its three references as the documents they paste.
    - Adapt minimally. Only rename terms that clash with the user's existing vocabulary — if they call them "playbooks", say playbooks. Don't rewrite the procedure.
 2. **Create the skills index:** `<skills>/README.md` from `templates/SKILLS-INDEX.md`. Fill it in **with the user** — the library table seeded with `skill-creation` itself, the conventions section matching what they actually chose, and the **Install record** completed with all six decisions. Never install it with placeholders left in; the record is how a session six months from now knows how skills get built here.
-3. **Install the skill template** (optional, default yes): `templates/SKILL-TEMPLATE.md` → `<skills>/_template/SKILL.md`. Ask first; some users would rather the skill write from scratch every time.
-4. **Wire the standing instructions file.** This is the stickiness step — an install that only creates folders dies at the user's first new chat. Merge into their existing file, in their format:
+3. **Install the skill template** (optional, default yes): `templates/SKILL-TEMPLATE.md` → `<skills>/SKILL-TEMPLATE.md`, as a loose file. **Do not install it as a `SKILL.md` inside a folder**, and never inside a discovery directory: its frontmatter is placeholders (`name: SKILL_NAME`), which is not spec-valid, so a platform scanning that directory would either reject it or register a broken skill. Ask before installing it; some users would rather the skill write each one from scratch.
+4. **Wire the standing instructions file.** This is the stickiness step — an install that only creates folders dies at the user's first new chat.
+
+   **Merge, or a new file?** If the platform uses a single instructions *file* (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`), append to it in the user's own format — read it first, match its headings, never rewrite what's there. If the platform uses a rules *directory* (`.cursor/rules/*.mdc`), **a new scoped file is the merge** — that is how the directory is designed to work, and editing their existing rule file risks clobbering rules you don't understand. Either way, read what already exists first: if a rule already covers skill routing, extend it instead of adding a competing one. Then add:
 
    > **Building skills.** Before building anything new, check `<skills>/README.md` — a skill may already cover it. When the user wants to automate a repeating workflow, turn a prompt into something reusable, or says "build me a skill", use the `skill-creation` skill: it gates whether the thing should be a skill at all, then scaffolds, installs and tests it. Every new skill gets registered in that index.
 
@@ -144,7 +161,7 @@ Whichever you pick: the **description discipline in `skill/SKILL.md` Step 6b app
 Build **one real skill the user actually wants**, not a toy. This is the phase that proves the install and teaches the funnel at the same time.
 
 1. **Pick it with the user.** Ask: "What do you explain to your AI more than once a month?" Steer toward something small — a Tier 1 or Tier 2 with one reference file. A first build that needs API credentials will stall on the credentials and teach nothing about the funnel.
-2. **Run `skill/SKILL.md` end to end, out loud:** the Step 0 gate (say the verdict, don't just think it) → tier set silently → interview per DP-6 → **spec block, confirmed** → write the folder → install and verify discovery → generate realistic test prompts → **dry-run per DP-4, all four checklist items reported, including the value check** → register in `<skills>/README.md`.
+2. **Run `skill-creation/SKILL.md` end to end, out loud:** the Step 0 gate (say the verdict, don't just think it) → tier set silently → interview per DP-6 → **spec block, confirmed** → write the folder → install and verify discovery → generate realistic test prompts → **dry-run per DP-4, all four checklist items reported, including the value check** → register in `<skills>/README.md`.
    **If the Step 0 gate says no** — which happens, and is a success, not a failure — say which container it should be instead, build *that* (a line in the instructions file, a script, a saved prompt), then pick a different candidate and run the funnel again. The user needs to see the funnel complete once.
 3. **Verification test — the acceptance gate (Step 8b), and a real stop.** The user opens a **fresh session**, types one of the approved test prompts the way they'd say it on a workday, and reports back two things: did the skill get picked up, and was the output right? Tell them exactly what to type and then wait — Phase 4 does not start until the answer is back. Record the prompt and a one-line summary of the result in `STATUS.md`.
    - It fired and the output was right → the install works.
@@ -158,7 +175,8 @@ Build **one real skill the user actually wants**, not a toy. This is the phase t
 2. Tick every phase in `STATUS.md`; empty the Blockers row or state what remains.
 3. **Confirm the install record in `<skills>/README.md` is filled in** — all six decisions — before anything else. That block is the only thing that survives this session.
 4. Leave the habit behind, one line: **"The third time you explain the same thing to your AI, that's a skill — and check the index before building, because it might already be one."**
-5. The kit repo is now safe to delete, or keep it for re-reads. Nothing downstream depends on it.
+5. **Give `STATUS.md` a home before anything else.** It is the resume spine, it lives in this repo, and the next step says the repo is disposable — so copy it to `<skills>/install-record-STATUS.md` (or fold its decisions table into the index's Install record and say you've done so). On a platform with no persistent memory this file is the only thing that remembers how the install went; losing it means the next session re-derives your choices by guessing.
+6. Only then is the kit repo safe to delete. Keeping it for re-reads is also fine — nothing downstream depends on it.
 
 ## If things go wrong
 
