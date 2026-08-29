@@ -43,11 +43,15 @@ Ask one at a time. Wait for the answer before asking the next. Do not front-load
 **Q7 — Edge cases**
 "What should it do when the input is missing, incomplete or ambiguous — stop and ask, make a best guess and flag it, or skip that piece and carry on?"
 
+**Q7b — Re-runs**
+"If this runs again over something it already produced — the same week, the same document, the same client — should it overwrite, add to what's there, or stop and ask?"
+(Ask this whenever the skill writes anything that persists. A skill that silently overwrites last month's work is the most expensive bug in this whole format, and it never shows up in a first run.)
+
 ---
 
 ## Tier 3 adds
 
-All of Tier 2's questions, plus:
+All of Tier 2's questions (Q7 and Q7b), plus:
 
 **Q8 — Integrations**
 "Which external APIs or services does it call? What's the auth — an API key, OAuth, a connected tool? And what does a response look like?"

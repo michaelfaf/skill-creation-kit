@@ -9,7 +9,6 @@ Every skill built here, and the rules for building the next one.
 | Skill | What it does | Tier | Say this to fire it |
 |---|---|---|---|
 | `skill-creation` | Builds a new skill end to end: gate, size, interview, spec, write, install, test | 3 | "build me a skill for…" |
-| | | | |
 
 <!-- Add one row per skill at ship time (skill-creation Step 9). A skill that isn't in
      this table is a skill nobody knows exists, including a future session of your own AI. -->
@@ -31,13 +30,14 @@ Every skill built here, and the rules for building the next one.
 | Skills folder | PATH |
 | Discovery method (DP-1) | native skills directory / symlink from workspace / routing line in the instructions file / paste-in |
 | **Discovery verified by** | THE ACTUAL COMMAND for this setup — e.g. `ls -lL <dir>/<name>/SKILL.md`, or `test -f <path>/SKILL.md` plus `grep -n "<path>" <instructions file>`. Write the command, not the word "verified": every future build re-runs it. |
-| Ordering prefixes on folders (DP-2) | yes (next number: N) / no |
+| Ordering prefixes on folders (DP-2) | yes — two digits, zero-padded, space-separated, starting at `01`; **derive the next number by listing the folder, never from a written-down counter** / no |
 | Companion project folder (DP-3) | never / Tier 3 only / Tier 2 and 3 — at PATH |
 | Dry-run gate (DP-4) | fresh subagent / fresh session the user runs / self-review |
 | Invocation (DP-5) | automatic from the description / routing line ("A via routing rule") / explicit command / both / paste-in |
 | Interview mode (DP-6) | the rule, not one word — e.g. "one question at a time by default; infer-and-confirm when the request already covers task, inputs and output" |
 | **Subagents / per-task model choice** | yes / no — a skill's mechanical steps are only marked for cheap-model dispatch where this is yes |
 | Instructions file wired | PATH (the file holding the line that routes skill requests here) |
+| Install transcript | `install-record-STATUS.md` in this folder, if it was copied here — a **frozen** record of how the original install went: scan findings, decisions, the first skill built. Read it for context on *why* a choice was made; never update it, and never treat it as current state. This table is the live record. Delete the row if no such file was kept. |
 
 ## Teammate setup
 

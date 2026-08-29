@@ -16,6 +16,8 @@ A single entry point for building any new skill, end to end: gate the idea, size
 Every question below exists to decide which of those three layers the skill needs. A skill with a `references/` folder it doesn't need is bloat; a skill missing one hallucinates the thing it should have known.
 
 > **Install-time settings.** Six choices were made when this skill was installed and recorded in the skills index (`<skills>/README.md`, "Install record"). Read that record before Step 4 — it tells you where skills live, whether folders take an ordering prefix, whether complex skills get a companion project folder, how the dry-run gate runs, how skills get invoked, and which interview mode to use. If the record is missing, ask the user rather than guessing.
+>
+> `<skills>` should have been replaced with a real path when this skill was installed. **If you are still reading the literal text `<skills>` below, it wasn't** — the index is the `README.md` sitting one level above this skill's own folder. Find it, use it, and replace the placeholders here so the next session doesn't repeat the hunt.
 
 ---
 
@@ -70,8 +72,8 @@ Read `references/dbs-questions.md` now.
 Ask from the tier's question set — one at a time, waiting for each answer, unless the install record says the user chose batch or infer-and-confirm mode. **Skip any question already answered by the trigger message or by brainstorming.**
 
 - All tiers: Q1a, Q1b, Q2–Q6
-- Tier 2 adds: Q7
-- Tier 3 adds: Q7 + Q8–Q10
+- Tier 2 adds: Q7, plus Q7b whenever the skill writes anything that persists
+- Tier 3 adds: Q7 + Q7b + Q8–Q10
 
 Track every answer — the spec block and the build both come straight out of them.
 
@@ -171,9 +173,9 @@ A skill usually can't be invoked in the **same session** it was installed: most 
 
 **8a — Dry-run (you run it now).** Run the gate the way the install record specifies (fresh subagent, fresh chat the user drives, or self-review as a last resort).
 
-**What the cold reader gets** — exactly this, and nothing else: the new `SKILL.md`, every `references/` file it points at, any standing-instruction rules it points at, and one approved prompt. **Nothing from the build conversation** — not the spec block, not the interview answers, not your reasoning. Those are what you're testing the skill can survive without. (Give them the reference files: the skill is supposed to load them, so withholding them tests nothing but your own patience.)
+**What the cold reader gets** — exactly this, and nothing else: the new `SKILL.md`, every `references/` file it points at, any standing-instruction rules it points at, **any workspace file the skill reads** (a format doc, a data file, an example the workflow opens), and one approved prompt. Miss that fourth item and the cold reader hits a path that doesn't exist for it and reports a dead reference that isn't one. **Nothing from the build conversation** — not the spec block, not the interview answers, not your reasoning. Those are what you're testing the skill can survive without. (Give them the reference files: the skill is supposed to load them, so withholding them tests nothing but your own patience.)
 
-If the gate runs in a session the *user* drives, assemble that payload into one file yourself (`<skills>/_dryrun-<skill-name>.md`, prompt at the bottom), hand over the path, and tell them to paste the whole file and add nothing else. Delete it once the gate passes. Never ask the user to work out what to paste — that is how the build conversation leaks in and the gate quietly stops being cold. Check all four:
+If the gate runs in a session the *user* drives, assemble that payload into one file yourself (`_dryrun-<skill-name>.md`, prompt at the bottom), hand over the path, and tell them to paste the whole file and add nothing else. Delete it once the gate passes. **Put it somewhere the platform does not scan for skills** — if the skills folder *is* the discovery directory, write it to the workspace root or a scratch folder instead; a stray markdown file in a discovery directory is at best noise and at worst a malformed skill. Never ask the user to work out what to paste — that is how the build conversation leaks in and the gate quietly stops being cold. Check all four:
 
 - Does the workflow execute in the correct order — no dead references, no dead ends?
 - Do the `references/` and `scripts/` load at the steps that need them?

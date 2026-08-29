@@ -21,7 +21,7 @@ The gating questions re-derive what the tier implies anyway — Q3 (needs refere
 - Mechanical input/output: parse, extract, format, convert, read X return Y
 - No voice or tone matching
 - No external API calls
-- Output is inline text or structured text (JSON, a markdown table) returned in the conversation — not written to disk
+- Output is inline text or structured text (JSON, a markdown table) returned in the conversation
 - Examples: extract action items from a transcript · reformat a CSV as JSON · pull one field out of a contact record
 
 ---
@@ -30,13 +30,14 @@ The gating questions re-derive what the tier implies anyway — Q3 (needs refere
 
 **DBS layers:** Direction + Blueprints
 **Length target:** 200–400 lines
-**Process:** base questions + Q7 → spec block → build → test → ship
+**Process:** base questions + Q7 (+ Q7b if it writes anything that persists) → spec block → build → test → ship
 **Creates** a companion project folder (README + STATUS + DESIGN) *if the install record says complex skills get one*.
 
 **Signals:**
 - Output must match a specific voice or tone
 - The task needs business-specific knowledge or structure the AI doesn't have on its own
 - The deliverable follows a house format that's been refined over time
+- **Output may be written to a file** — a note, a draft, a markdown document the AI composes directly. Writing a file the AI *writes with words* is Tier 2; it's only Tier 3 when code has to generate it
 - Examples: an outreach drafter in the founder's voice · a meeting-notes writer in the team's template · a proposal reviewer against the company's standards
 
 ---
@@ -45,12 +46,12 @@ The gating questions re-derive what the tier implies anyway — Q3 (needs refere
 
 **DBS layers:** Direction + Blueprints + Solutions
 **Length target:** 400–500 lines max — past 500, reference material belongs in `references/`
-**Process:** brainstorm if novel → base questions + Q7 + Q8–Q10 → spec block → build → test → ship
+**Process:** brainstorm if novel → base questions + Q7 + Q7b + Q8–Q10 → spec block → build → test → ship
 **Creates** the full companion project folder (README, STATUS, DESIGN, PLAN, sessions/, artifacts/) *if the install record says so*.
 
 **Signals:**
 - Calls an external API or service
-- Writes real files to disk (.docx, .pdf, images, database rows)
+- Produces **generated or byte-identical** files — .docx, .pdf, images, spreadsheets, database rows: anything a script must build rather than the AI compose
 - Output must be identical every run (calculations, generated documents)
 - A multi-step pipeline with subagents or scripts
 - Examples: an enrichment pipeline over a CRM API · a proposal generator with PDF output · an invoice builder

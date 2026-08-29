@@ -63,7 +63,11 @@ Some people number their skill folders (`01 note-taker`, `02 outreach-drafter`) 
 
 That last point is what keeps a numbered folder spec-compliant: at the point of discovery the parent directory *is* named exactly the skill's name. Put a numbered folder directly into a discovery directory and the name/folder rule breaks — the platform may not find it, and a spec validator will reject it.
 
-To find the next number, list the storage folder and add one to the highest. Never renumber an existing folder: links and habits point at it.
+**The format:** two digits, zero-padded, then a single space, then the bare name — `01 note-taker`, `02 outreach-drafter`. The first skill is `01`. Past 99, go to three digits for new folders and leave the old ones alone.
+
+**Finding the next number:** list the storage folder and add one to the highest you see. If the folder is empty, the next number is `01`. **Derive it by listing, every time** — don't trust a written-down counter, which goes stale the moment a skill is added by hand. Never renumber an existing folder: links and habits point at it.
+
+A space in the folder name means every shell command touching it must quote the path (`ln -s "…/02 outreach-drafter" …`). That is the cost of the convention; if it bothers you, use `02-outreach-drafter` instead and keep it consistent.
 
 ## Discovery — getting the platform to see it
 
@@ -83,6 +87,8 @@ The install record names the choice. The mechanics per platform family:
 ln -s "/absolute/path/to/workspace/skills/02 outreach-drafter" ~/.claude/skills/outreach-drafter
 ls -lL ~/.claude/skills/outreach-drafter/SKILL.md   # dereferences: fails loudly if the target path is wrong
 ```
+
+**If the discovery path is already taken** — `<discovery dir>/<name>` exists as a real directory rather than your link — stop and look before doing anything. If it's an older copy of the same skill, back it up (`mv` it aside with a dated suffix) and tell the user where it went. If it's a *different* skill that happens to share the name, the name is the problem: rename yours and update the frontmatter to match. Never delete a directory at a discovery path to make room — you cannot tell from the path alone whether it is disposable, and skills are exactly the thing people forget they installed.
 
 `ls -lL` is the verification, not `ls -l`: the `-L` follows the link, so a broken target errors, where plain `ls -l` prints a healthy-looking line for a broken link and exits 0. **`-L` is only meaningful when there is a link** — on a direct install just check the file exists, and on a routed install check both that the file exists and that the routing line names its path. Report which check you ran; "verified" without naming the check is how a bad install gets signed off. If your platform or filesystem doesn't follow symlinks, copy instead and note in the install record that edits need re-copying — a stale copy is the second most common way a skill misbehaves after a broken link.
 
