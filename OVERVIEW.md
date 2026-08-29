@@ -33,7 +33,7 @@ Most skills are Direction only or Direction plus Blueprints. A `references/` fol
 
 **Tier.** A size label — 1 simple, 2 needs knowledge or voice, 3 calls APIs or writes files — that the AI sets *silently* to route how much process the build gets. You never get asked "what tier is this?", because you'd have to learn the model to answer, and the interview re-derives it anyway.
 
-**The interview.** Six base questions, up to ten for complex skills, asked one at a time. Each one decides something structural: Q3 decides whether there's a `references/` folder, Q4 decides whether there's a `scripts/` folder, Q7 decides the edge-case behaviour. Anything you already said in your opening request gets skipped.
+**The interview.** Seven base questions, up to twelve for complex skills, asked one at a time. Each one decides something structural: Q3 decides whether there's a `references/` folder, Q4 decides whether there's a `scripts/` folder, Q7 decides the edge-case behaviour. Anything you already said in your opening request gets skipped.
 
 **The spec block.** A ten-line summary presented before a single file is written: name, tier, trigger, layers, behaviour, install path. You confirm or correct it. This is the cheapest place in the whole process to catch a wrong name or a missing reference — after the build, each of those is a rewrite.
 
@@ -49,7 +49,7 @@ The fourth dry-run check is the one people skip and shouldn't: **would an AI wit
 
 You say: *"I keep doing this by hand every week, can we make it automatic?"*
 
-Your AI loads the skill and gates it — out loud, so you can disagree. Say it passes. The AI silently sizes it, then asks you six questions, one at a time, skipping the two you already answered. It presents a spec block; you correct one field. It writes the folder — `SKILL.md`, plus a reference file if the interview said you need one — installs it where your platform looks, and verifies that path actually resolves.
+Your AI loads the skill and gates it — out loud, so you can disagree. Say it passes. The AI silently sizes it, then asks you seven questions, one at a time, skipping the two you already answered. It presents a spec block; you correct one field. It writes the folder — `SKILL.md`, plus a reference file if the interview said you need one — installs it where your platform looks, and verifies that path actually resolves.
 
 Then it proposes three test prompts in your own words, and runs a cold dry-run on one of them. Say the dry-run reveals the skill never told the AI to stop before sending anything. That gets fixed and re-run.
 

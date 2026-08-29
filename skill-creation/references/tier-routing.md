@@ -24,6 +24,8 @@ The gating questions re-derive what the tier implies anyway — Q3 (needs refere
 - Output is inline text or structured text (JSON, a markdown table) returned in the conversation
 - Examples: extract action items from a transcript · reformat a CSV as JSON · pull one field out of a contact record
 
+**Tier 1 is the shape most likely to fail the Step 8a value check**, and that is structural, not bad luck: a Direction-only skill has no Blueprints, so the *only* thing it offers over a capable model working from a plain request is structure — and a capable model invents serviceable structure on its own. If the value check comes back "the baseline produced roughly the same thing," the fix is a **real Blueprint** — the house format, the actual field list, the examples, the thing the model genuinely doesn't know — which makes it a Tier 2. The fix is never a longer `SKILL.md`: more steps restating what the model would do anyway is exactly what the check just caught.
+
 ---
 
 ## Tier 2 — Medium

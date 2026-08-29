@@ -194,11 +194,18 @@ If the gate runs in a session the *user* drives, assemble the payload into one f
 - Does the workflow execute in the correct order — no dead references, no dead ends?
 - Do the `references/` and `scripts/` load at the steps that need them — and not before? *(Only answerable when the cold reader could open the files itself. If you had to paste their contents in, it has read everything before reaching the step that says to: report this item **untested**, never passed.)*
 - Does the output match what the spec described?
-- **Value check:** would an AI *without* this skill have produced roughly the same thing? **Run the baseline, don't imagine it:** give the same prompt to a second cold reader with no skill attached, and compare the two outputs side by side. If you can't run a second reader, report this item **untested** rather than passing it — judging your own skill against an imagined alternative always flatters the skill. If the two outputs are close, the skill isn't earning its load: the Blueprints or the rules aren't doing real work. Tighten them, or reconsider whether Step 0 was right.
+- **Value check:** would an AI *without* this skill have produced roughly the same thing? **Run the baseline, don't imagine it:** give the same prompt to a second cold reader with no skill attached, and compare the two outputs side by side. **Retire the predecessor first (Step 9.3), or run the baseline somewhere it can't see it** — if the saved prompt this skill replaces is still sitting in the workspace, the baseline reader finds it, uses it, and you end up comparing the skill against itself. That comparison always flatters the predecessor and fails the new skill for the wrong reason. If you can't run a second reader, report this item **untested** rather than passing it — judging your own skill against an imagined alternative always flatters the skill. If the two outputs are close, the skill isn't earning its load: the Blueprints or the rules aren't doing real work. Tighten them, or reconsider whether Step 0 was right.
 
 **8b — Acceptance (the user runs it).** The only true test of invocation: the user opens a **fresh session**, types one approved prompt the way they'd say it on a normal workday, and confirms the skill (a) is picked up — automatically from its description, or by whatever explicit invocation the install record names — and (b) followed cold, produces the right result. The dry-run cannot test this; the fresh session is what proves the skill actually loads.
 
+**Read the failure correctly — the two halves fail differently and the fix is never the same:**
+- **It didn't get picked up** → *the description is the problem, not the skill.* The body was never read. Rewrite the `description` per Step 6b — more trigger phrases, more of the user's actual words, no workflow summary — reinstall, and have them retest in **another** fresh session. Don't touch the workflow.
+- **It got picked up but the output was wrong** → *the body is the problem.* Discovery works. Fix the step that went wrong and re-run **8a only** — a fresh session proves nothing here.
+Diagnosing these the wrong way round is the most expensive mistake at this gate: you rewrite a working workflow because the description never fired, or you keep re-testing discovery that was fine all along.
+
 Flag any issue with a specific fix. Apply it and re-run the affected gate — not both.
+
+**If the same gate fails twice, stop. Don't loop.** A second failure means the fix was a guess, and a third attempt is usually a new defect wearing the old one's clothes. Name the residual plainly, record it in the companion `STATUS.md` (or tell the user outright if there is no companion folder), ship the skill with the issue named, and re-check it on first real use. A skill shipped with one known rough edge beats a skill still being polished a week later — and beats a fourth silent rewrite.
 
 ---
 

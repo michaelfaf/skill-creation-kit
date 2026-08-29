@@ -29,7 +29,8 @@ Every skill built here, and the rules for building the next one.
 |---|---|
 | Skills folder | PATH |
 | **Platform** | WHICH AI TOOL — it decides the shape of a routing line (a `.mdc` rule with `alwaysApply: true`, versus a plain line in an `AGENTS.md`-style file) and which paths exist at all |
-| Discovery method (DP-1) | native skills directory / symlink from workspace / routing line in the instructions file / both a skills directory and a routing line / paste-in |
+| Discovery method (DP-1) | **A** canonical in the workspace, symlinked into the discovery directory / **B** canonical in the platform's discovery directory / **C** canonical in the workspace, routed by an instructions line / **D** documents the user pastes |
+| **Discovery directory** | THE ACTUAL PATH the platform scans (e.g. `~/.claude/skills/`, `.claude/skills/`) — or, on **C**/**D**, `none — routed by <instructions file>` / `none — paste-in`. Every future install writes here; don't leave it to be reverse-engineered out of the verification command below. |
 | **Link or copy** | symlinked (edits are live) / copied (edits need re-copying — say so, and re-copy after every skill edit) / neither, the folder is read in place |
 | **Discovery verified by** | THE ACTUAL COMMAND for this setup — e.g. `ls -lL <dir>/<name>/SKILL.md`, or `test -f <path>/SKILL.md` plus `grep -n "<path>" <instructions file>`. Write the command, not the word "verified": every future build re-runs it. |
 | Ordering prefixes on folders (DP-2) | yes — two digits, zero-padded, space-separated, starting at `01`; **derive the next number by listing the folder, never from a written-down counter** / no |

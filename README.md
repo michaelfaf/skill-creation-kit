@@ -6,7 +6,7 @@ A funnel for turning a workflow you keep explaining to your AI into a **skill**:
 
 **The problem.** You explain the same thing to your AI over and over — your update format, how you want transcripts turned into notes, the checks you run before something goes out. Each time you explain it differently, so you get different output, and the version you liked lives in a chat you can't find. Saving the prompt works until the task has an edge case in it. And the opposite failure is just as common: people discover skills, build fifteen folders in a weekend, and twelve of them should have been one line of instructions or a small script. Those never fire, and they bury the three that work.
 
-**What this installs.** A skill that builds skills. It **gates the request first** — most requests should be a line in your instructions file, a script, or just doing the thing once, and it says so — then sizes what's left, asks six questions (each one deciding whether the skill needs a knowledge file, a script, or neither), confirms a spec block before writing anything, installs the skill where your platform discovers it, **verifies it actually resolves**, and tests it twice: once cold by someone with no context, once by you in a fresh session, because most platforms can't test a skill they just installed. Then it registers it in an index so you stop rebuilding what you already have.
+**What this installs.** A skill that builds skills. It **gates the request first** — most requests should be a line in your instructions file, a script, or just doing the thing once, and it says so — then sizes what's left, asks seven questions (each one deciding whether the skill needs a knowledge file, a script, or neither), confirms a spec block before writing anything, installs the skill where your platform discovers it, **verifies it actually resolves**, and tests it twice: once cold by someone with no context, once by you in a fresh session, because most platforms can't test a skill they just installed. Then it registers it in an index so you stop rebuilding what you already have.
 
 **Use it if:** you've explained the same workflow to your AI more than twice · you've built skills that never fire and don't know why · you want your team building skills the same way instead of six different ways · you suspect half your saved prompts should be something else · you're about to build your first one and would rather not learn the failure modes the slow way.
 
@@ -37,7 +37,7 @@ A funnel for turning a workflow you keep explaining to your AI into a **skill**:
 | `AGENTS.md` / `CLAUDE.md` | Entry instructions for coding agents that auto-read those files |
 | `skill-creation/SKILL.md` | The skill itself, in portable agent-skill format |
 | `skill-creation/references/tier-routing.md` | How a skill gets sized, and the brainstorming fallback when no brainstorming skill exists |
-| `skill-creation/references/dbs-questions.md` | The interview — six base questions, four more for complex skills |
+| `skill-creation/references/dbs-questions.md` | The interview — seven base questions, five more for complex skills |
 | `skill-creation/references/skill-anatomy.md` | The portable format: frontmatter fields and limits, folder rules, per-platform discovery paths, how to verify an install resolves |
 | `templates/SKILLS-INDEX.md` | The skills index the installer creates for you, with the install record |
 | `templates/SKILL-TEMPLATE.md` | A `SKILL.md` skeleton for writing one by hand — see `templates/README.md` for what maps to which decision |

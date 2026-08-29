@@ -83,6 +83,8 @@
 - [ ] Install record in the skills index confirmed complete — every row, including the literal verification command and the subagent / model-choice row
 - [ ] This file fully ticked; Blockers emptied or what remains stated
 - [ ] User walked through what's installed and where, with the wired instructions file named
+- [ ] The habit line left behind: "The third time you explain the same thing to your AI, that's a skill — and check the index before building, because it might already be one"
+- [ ] Told the user the kit repo is now safe to delete (keeping it for re-reads is fine — nothing downstream depends on it)
 
 ## Blockers
 
