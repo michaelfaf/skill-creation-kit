@@ -1,0 +1,91 @@
+# Skill anatomy — the portable format
+
+A skill is a folder with a `SKILL.md` at its root. The format is an open specification (agentskills.io) supported by a long and growing list of agents, so a skill written to it moves between tools without a rewrite. Write to the spec even if your platform is lenient — the day you switch tools, or hand a skill to a teammate on a different one, the strictness pays for itself.
+
+## The folder
+
+```
+skill-name/
+├── SKILL.md        ← required: frontmatter + instructions
+├── references/     ← optional: knowledge files loaded on demand
+├── scripts/        ← optional: executable code
+└── assets/         ← optional: templates, data, images
+```
+
+**The folder name must equal the frontmatter `name`.** This is a spec rule, not a convention, and it is the one that quietly breaks installs. See "Ordering prefixes" below if your install record says folders take a number.
+
+## Frontmatter
+
+Required:
+
+| Field | Rules |
+|---|---|
+| `name` | 1–64 characters. Lowercase letters, digits and hyphens only. No leading or trailing hyphen, no doubled hyphens. Must match the folder name. Some platforms additionally reject vendor words (e.g. "claude", "anthropic") and XML tags in the name — avoid both and you're portable everywhere. |
+| `description` | 1–1024 characters, non-empty, no XML angle brackets. Must convey **what** the skill does and **when** to use it. This is the only part of the skill loaded into every session, so it is the entire basis on which the skill does or doesn't fire. |
+
+Optional, all rarely needed:
+
+| Field | What it's for |
+|---|---|
+| `license` | A license name (`MIT`, `Apache-2.0`) or a pointer to a bundled licence file. Worth setting on anything you'll share. |
+| `compatibility` | Up to 500 characters describing environment requirements — a required tool, a system package, network access. Most skills need none. Use it rather than burying a hard requirement in the body. |
+| `metadata` | A free-form map of string keys to string values for client-specific extras — `author`, `version`. |
+| `allowed-tools` | A space-separated list of pre-approved tools (e.g. `Read Bash(git:*)`). Marked experimental in the spec; support varies. Don't rely on it. |
+
+Minimal valid skill:
+
+```markdown
+---
+name: skill-name
+description: A description of what this skill does and when to use it.
+---
+
+The instructions.
+```
+
+## Size and layering
+
+The format assumes **progressive disclosure** in three stages, and the sizes follow from it:
+
+1. **Frontmatter** — always loaded, in every session. Roughly 100 tokens. Keep it tight; this is rent you pay constantly.
+2. **`SKILL.md` body** — loaded when the skill fires. Target under ~5,000 tokens and hard-cap at 500 lines. Past that, the body is carrying reference material that should be a file.
+3. **`references/`, `scripts/`, `assets/`** — loaded only when the workflow actually reaches them. Free until used.
+
+**Reference depth rule:** reference files sit one level below `SKILL.md` and are pointed to by relative path. Never a reference that points to a reference that points to a reference — weaker agents lose the thread, and every hop is a chance to load the wrong thing.
+
+## Ordering prefixes
+
+Some people number their skill folders (`01 note-taker`, `02 outreach-drafter`) so the directory reads as a list in creation order. If the install record says prefixes are on, the rule is exact:
+
+- The **number lives on the storage folder only.**
+- The frontmatter `name` is always bare: `outreach-drafter`, never `02 outreach-drafter`.
+- The entry in the platform's **discovery directory** is always bare too — a symlink or copy named `outreach-drafter`.
+
+That last point is what keeps a numbered folder spec-compliant: at the point of discovery the parent directory *is* named exactly the skill's name. Put a numbered folder directly into a discovery directory and the name/folder rule breaks — the platform may not find it, and a spec validator will reject it.
+
+To find the next number, list the storage folder and add one to the highest. Never renumber an existing folder: links and habits point at it.
+
+## Discovery — getting the platform to see it
+
+The install record names the choice. The mechanics per platform family:
+
+| Platform | Where it looks | Verify |
+|---|---|---|
+| Claude Code | `~/.claude/skills/<name>/` (personal) or `.claude/skills/<name>/` (project) | `ls -lL ~/.claude/skills/<name>/SKILL.md` |
+| Any agent with a native skills directory | that directory, one folder per skill, folder named `<name>` | list the file through the link, as above |
+| Cursor | recent versions read a skills directory; older ones don't. If yours does, install there. If not: keep the skill folder in the workspace and add `.cursor/rules/<name>.mdc` with frontmatter `description:` and `alwaysApply: true`, whose body says: "When the user asks about \<triggers\>, read `<path>/SKILL.md` and follow it." | open a new composer and check the rule is listed as active |
+| Codex / Gemini CLI / Copilot / any AGENTS.md-style agent | no skills directory: keep the folder in the workspace and add the same routing line to `AGENTS.md` / `GEMINI.md` / `.github/copilot-instructions.md` | start a fresh session and use a trigger phrase |
+| Chat-only | no discovery at all: the skill is a document the user pastes. Keep an index of them so the user can find the right one. | paste it once and run a trigger prompt |
+
+**The keep-one-copy rule.** If the skill's canonical home is the user's workspace and the platform reads from somewhere else, **link, don't copy** — a symlink from the discovery directory to the workspace folder means edits are live and there is exactly one version:
+
+```bash
+ln -s "/absolute/path/to/workspace/skills/02 outreach-drafter" ~/.claude/skills/outreach-drafter
+ls -lL ~/.claude/skills/outreach-drafter/SKILL.md   # dereferences: fails loudly if the target path is wrong
+```
+
+`ls -lL` is the verification, not `ls -l`: the `-L` follows the link, so a broken target errors instead of printing a plausible-looking line. If your platform or filesystem doesn't follow symlinks, copy instead and note in the install record that edits need re-copying — a stale copy is the second most common way a skill misbehaves after a broken link.
+
+## When to validate
+
+The spec ships a reference validator (`skills-ref`, in the agentskills reference library on GitHub) that checks frontmatter validity and naming — roughly `skills-ref validate ./my-skill`. Check that repository for current install instructions before relying on the exact invocation. It's worth running when publishing a skill or handing one to a teammate on a different tool. For a personal skill, the checks in this file are the same ones it makes, and running them by eye is enough.

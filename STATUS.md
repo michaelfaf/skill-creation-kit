@@ -1,0 +1,81 @@
+# Kit progress
+
+> Maintained by the implementing AI. Tick tasks as they complete; record decisions the moment they're made. A fresh session resumes from this file alone.
+
+## Scan results (Phase 0)
+
+| Check | Finding |
+|---|---|
+| Platform (and: files? shell? symlinks? subagents? per-task model choice? persistent memory?) | _pending_ |
+| Native skills directory? (path, or "none") | _pending_ |
+| User's workspace (notes vault / project folder / git repo / shared repo) | _pending_ |
+| Existing standing instructions file (path — and read it) | _pending_ |
+| Existing skills, prompts or commands folder | _pending_ |
+| Existing project/status folder habit? (steers DP-3) | _pending_ |
+
+## Decisions (Phase 1)
+
+| # | Decision | Choice | Notes |
+|---|---|---|---|
+| DP-1 | Where skills live + how they're discovered | _pending_ | |
+| DP-2 | Ordering prefix on folders | _pending_ | |
+| DP-3 | Companion project folder | _pending_ | |
+| DP-4 | Dry-run gate | _pending_ | |
+| DP-5 | Invocation method | _pending_ | |
+| DP-6 | Interview mode | _pending_ | |
+
+## Tasks
+
+### Phase 0 — Environment scan
+- [ ] Platform + capabilities identified
+- [ ] Skills directory checked (found, or confirmed absent)
+- [ ] Workspace located (or chat-only path confirmed)
+- [ ] Existing instructions file read
+- [ ] Scan results recorded above
+
+### Phase 1 — Decisions
+- [ ] User oriented with `EXAMPLE-SKILL.md`
+- [ ] DP-1 through DP-6 decided and recorded above
+
+### Phase 2 — Install
+- [ ] `skill-creation` installed where the platform discovers it (or kept as the paste-in document)
+- [ ] Discovery verified — the skill resolves (`ls -lL` through the link, or the platform's equivalent)
+- [ ] `<skills>/README.md` created from the template — library table seeded, Install record filled in with all six decisions
+- [ ] `SKILL-TEMPLATE.md` installed (or declined — record which)
+- [ ] Standing instructions file wired, and the user told which file it landed in
+- [ ] Install paths recorded here
+
+| Install paths | |
+|---|---|
+| Skills folder | _pending_ |
+| Discovery entry | _pending_ |
+| Skills index | _pending_ |
+| Instructions file wired | _pending_ |
+| Companion project folder parent (if DP-3 ≠ never) | _pending_ |
+
+### Phase 3 — First live build
+- [ ] Real candidate chosen with the user
+- [ ] Step 0 gate run and the verdict said out loud
+- [ ] Interview run (per DP-6), spec block confirmed
+- [ ] Skill folder written; discovery verified
+- [ ] Test prompts generated and approved by the user
+- [ ] Dry-run gate run (per DP-4) — all four checklist items reported, value check included
+- [ ] Skill registered in `<skills>/README.md`
+- [ ] Acceptance test: user ran a fresh session and reported back
+
+| First skill | |
+|---|---|
+| Skill name + path | _pending_ |
+| Tier + DBS layers | _pending_ |
+| Dry-run verdict (incl. value check) | _pending_ |
+| Acceptance prompt used | _pending_ |
+| Did it fire? Was the output right? | _pending_ |
+
+### Phase 4 — Wrap up
+- [ ] User walked through what's installed and where
+- [ ] Install record in the skills index confirmed complete
+- [ ] This file fully ticked; final state recorded
+
+## Blockers
+
+- none
