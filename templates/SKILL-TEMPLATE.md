@@ -3,7 +3,7 @@ name: SKILL_NAME
 description: Use when USER_INTENT. Triggers — "PHRASE ONE", "PHRASE TWO", "PHRASE THREE". Also use when SECONDARY_SITUATION.
 ---
 
-<!-- TEMPLATE. Copy this file to <skills>/<skill-name>/SKILL.md and replace every ALL_CAPS
+<!-- TEMPLATE. Copy this file to your skills folder as <skill-name>/SKILL.md and replace every ALL_CAPS
      placeholder. Delete these comments as you go — a shipped skill has none left.
 
      name:        lowercase letters, digits, hyphens only. Must equal the folder name.

@@ -1,6 +1,8 @@
 # templates/ — install matrix
 
-Files the installer (IMPLEMENT.md Phase 2) creates in the user's workspace, and which decision gates each.
+> **This file is install-time documentation.** It maps templates to the decisions that gate them, for whoever is running the original install. It is not installed into the workspace and nothing later depends on it — if you are reading this after the install, you can ignore it.
+
+Files the installer creates in the user's workspace during the install walkthrough, and which decision gates each.
 
 | Template | Installed as | Gated by | Notes |
 |---|---|---|---|

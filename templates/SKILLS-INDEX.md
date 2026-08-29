@@ -28,13 +28,15 @@ Every skill built here, and the rules for building the next one.
 | Setting | Choice |
 |---|---|
 | Skills folder | PATH |
-| Discovery method (DP-1) | native skills directory / symlink from workspace / routing line in the instructions file / paste-in |
+| **Platform** | WHICH AI TOOL — it decides the shape of a routing line (a `.mdc` rule with `alwaysApply: true`, versus a plain line in an `AGENTS.md`-style file) and which paths exist at all |
+| Discovery method (DP-1) | native skills directory / symlink from workspace / routing line in the instructions file / both a skills directory and a routing line / paste-in |
+| **Link or copy** | symlinked (edits are live) / copied (edits need re-copying — say so, and re-copy after every skill edit) / neither, the folder is read in place |
 | **Discovery verified by** | THE ACTUAL COMMAND for this setup — e.g. `ls -lL <dir>/<name>/SKILL.md`, or `test -f <path>/SKILL.md` plus `grep -n "<path>" <instructions file>`. Write the command, not the word "verified": every future build re-runs it. |
 | Ordering prefixes on folders (DP-2) | yes — two digits, zero-padded, space-separated, starting at `01`; **derive the next number by listing the folder, never from a written-down counter** / no |
 | Companion project folder (DP-3) | never / Tier 3 only / Tier 2 and 3 — at PATH |
 | Dry-run gate (DP-4) | fresh subagent / fresh session the user runs / self-review |
 | Invocation (DP-5) | automatic from the description / routing line ("A via routing rule") / explicit command / both / paste-in |
-| Interview mode (DP-6) | the rule, not one word — e.g. "one question at a time by default; infer-and-confirm when the request already covers task, inputs and output" |
+| Interview mode (DP-6) | the rule, not one word — one question at a time / batch (all at once) / infer-and-confirm. E.g. "one question at a time by default, dropping to infer-and-confirm when the request already covers task, inputs and output" |
 | **Subagents / per-task model choice** | yes / no — a skill's mechanical steps are only marked for cheap-model dispatch where this is yes |
 | Instructions file wired | PATH (the file holding the line that routes skill requests here) |
 | Install transcript | `install-record-STATUS.md` in this folder, if it was copied here — a **frozen** record of how the original install went: scan findings, decisions, the first skill built. Read it for context on *why* a choice was made; never update it, and never treat it as current state. This table is the live record. Delete the row if no such file was kept. |

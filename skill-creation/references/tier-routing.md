@@ -70,6 +70,8 @@ Skip brainstorming when: Tier 1 (always) · the user gave a clear analogy · the
 
 **When delegating**, say: "This feels novel enough to brainstorm the shape before we spec it. Want to run that first, or do you already have a clear mental model?"
 
+**How to check whether one is installed:** look at the library table in the skills index (`<skills>/README.md`). If no row there is a brainstorming or discovery skill, there isn't one — don't go hunting the filesystem.
+
 **If no brainstorming skill is installed** — the common case — don't skip it and don't invent a long process. Run these three questions inline, in order, one at a time, and write the answers into the spec:
 
 1. "Walk me through the last time you did this by hand, start to finish. What did you look at first, and what did you produce?"
