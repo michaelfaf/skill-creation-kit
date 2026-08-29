@@ -54,7 +54,9 @@
 | Companion project folder parent (if DP-3 ≠ never) | _pending_ |
 
 ### Phase 3 — First live build
+- [ ] Informal store found in Phase 0 (old prompts, snippets) triaged through the Step 0 gate for candidates
 - [ ] Real candidate chosen with the user
+- [ ] Any candidate that failed the gate: right container built instead, and recorded below
 - [ ] Step 0 gate run and the verdict said out loud
 - [ ] Interview run (per DP-6), spec block confirmed
 - [ ] Skill folder written; discovery verified
@@ -62,6 +64,11 @@
 - [ ] Dry-run gate run (per DP-4) — all four checklist items reported, value check included
 - [ ] Skill registered in `<skills>/README.md`
 - [ ] Acceptance test: user ran a fresh session and reported back
+
+| Gate-failed candidates (if any) | |
+|---|---|
+| Candidate | _none / description_ |
+| Verdict + what got built instead | _pending_ |
 
 | First skill | |
 |---|---|

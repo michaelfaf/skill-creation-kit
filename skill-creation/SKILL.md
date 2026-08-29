@@ -169,7 +169,11 @@ Wait for approval or edits before running. A test prompt that says "test the ski
 
 A skill usually can't be invoked in the **same session** it was installed: most platforms load skill discovery at session start. So testing splits in two.
 
-**8a — Dry-run (you run it now).** Run the gate the way the install record specifies (fresh subagent, fresh chat the user drives, or self-review as a last resort). Whoever runs it gets the new `SKILL.md` and one approved prompt, cold, with no other context. Check all four:
+**8a — Dry-run (you run it now).** Run the gate the way the install record specifies (fresh subagent, fresh chat the user drives, or self-review as a last resort).
+
+**What the cold reader gets** — exactly this, and nothing else: the new `SKILL.md`, every `references/` file it points at, any standing-instruction rules it points at, and one approved prompt. **Nothing from the build conversation** — not the spec block, not the interview answers, not your reasoning. Those are what you're testing the skill can survive without. (Give them the reference files: the skill is supposed to load them, so withholding them tests nothing but your own patience.)
+
+If the gate runs in a session the *user* drives, assemble that payload into one file yourself (`<skills>/_dryrun-<skill-name>.md`, prompt at the bottom), hand over the path, and tell them to paste the whole file and add nothing else. Delete it once the gate passes. Never ask the user to work out what to paste — that is how the build conversation leaks in and the gate quietly stops being cold. Check all four:
 
 - Does the workflow execute in the correct order — no dead references, no dead ends?
 - Do the `references/` and `scripts/` load at the steps that need them?

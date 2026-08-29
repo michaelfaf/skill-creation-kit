@@ -74,7 +74,7 @@ The install record names the choice. The mechanics per platform family:
 | Claude Code | `~/.claude/skills/<name>/` (personal) or `.claude/skills/<name>/` (project) | `ls -lL ~/.claude/skills/<name>/SKILL.md` |
 | Any agent with a native skills directory | that directory, one folder per skill, folder named `<name>` | list the file through the link, as above |
 | Cursor | Skills-directory support is version-dependent — probe `~/.cursor/skills` and `.cursor/skills` rather than assuming either way. **The mechanism that works on every version is the rules directory:** keep the skill folder in the workspace and add `.cursor/rules/<name>.mdc` with frontmatter `description:` and `alwaysApply: true` (without `alwaysApply` the rule may never fire), whose body says: "When the user asks about \<triggers\>, read `<path>/SKILL.md` and follow it." Note `.cursor/rules/` is workspace-scoped: it needs repeating per workspace. | `test -f "<path>/SKILL.md"` **and** `grep -n "<path>" .cursor/rules/<name>.mdc` — the file exists *and* something points at it |
-| Codex / Gemini CLI / Copilot / any AGENTS.md-style agent | no skills directory: keep the folder in the workspace and add the same routing line to `AGENTS.md` / `GEMINI.md` / `.github/copilot-instructions.md` | start a fresh session and use a trigger phrase |
+| Codex / Gemini CLI / Copilot / any AGENTS.md-style agent | no skills directory: keep the folder in the workspace and add the same routing line to `AGENTS.md` / `GEMINI.md` / `.github/copilot-instructions.md` | `test -f "<path>/SKILL.md"` **and** `grep -n "<path>" AGENTS.md` — the skill exists *and* something routes to it |
 | Chat-only | no discovery at all: the skill is a document the user pastes. Keep an index of them so the user can find the right one. | paste it once and run a trigger prompt |
 
 **The keep-one-copy rule.** If the skill's canonical home is the user's workspace and the platform reads from somewhere else, **link, don't copy** — a symlink from the discovery directory to the workspace folder means edits are live and there is exactly one version:
@@ -85,6 +85,8 @@ ls -lL ~/.claude/skills/outreach-drafter/SKILL.md   # dereferences: fails loudly
 ```
 
 `ls -lL` is the verification, not `ls -l`: the `-L` follows the link, so a broken target errors, where plain `ls -l` prints a healthy-looking line for a broken link and exits 0. **`-L` is only meaningful when there is a link** — on a direct install just check the file exists, and on a routed install check both that the file exists and that the routing line names its path. Report which check you ran; "verified" without naming the check is how a bad install gets signed off. If your platform or filesystem doesn't follow symlinks, copy instead and note in the install record that edits need re-copying — a stale copy is the second most common way a skill misbehaves after a broken link.
+
+**Install check versus acceptance test — don't confuse them.** Everything in the table above is an *install* check: it proves the files are where they should be and something points at them. It runs immediately. Whether the skill actually *fires* is a separate question, answered only by starting a fresh session and using a real trigger phrase — see `SKILL.md` Step 8b. A passing install check on a skill that never fires means the description or the routing line is wrong, not the install.
 
 ## When to validate
 

@@ -29,19 +29,23 @@ Every skill built here, and the rules for building the next one.
 | Setting | Choice |
 |---|---|
 | Skills folder | PATH |
-| Discovery method | HOW THE AI FINDS SKILLS — native skills directory / symlink from workspace / routing line in the instructions file / paste-in |
-| Ordering prefixes on folders | yes (next number: N) / no |
-| Companion project folder | never / Tier 3 only / Tier 2 and 3 — at PATH |
-| Dry-run gate | fresh subagent / fresh session the user runs / self-review |
-| Invocation | automatic from the description / explicit command / both / paste-in |
-| Interview mode | one question at a time / batch / infer-and-confirm |
-| Instructions file wired | PATH (the line that routes skill requests here) |
+| Discovery method (DP-1) | native skills directory / symlink from workspace / routing line in the instructions file / paste-in |
+| **Discovery verified by** | THE ACTUAL COMMAND for this setup — e.g. `ls -lL <dir>/<name>/SKILL.md`, or `test -f <path>/SKILL.md` plus `grep -n "<path>" <instructions file>`. Write the command, not the word "verified": every future build re-runs it. |
+| Ordering prefixes on folders (DP-2) | yes (next number: N) / no |
+| Companion project folder (DP-3) | never / Tier 3 only / Tier 2 and 3 — at PATH |
+| Dry-run gate (DP-4) | fresh subagent / fresh session the user runs / self-review |
+| Invocation (DP-5) | automatic from the description / routing line ("A via routing rule") / explicit command / both / paste-in |
+| Interview mode (DP-6) | the rule, not one word — e.g. "one question at a time by default; infer-and-confirm when the request already covers task, inputs and output" |
+| **Subagents / per-task model choice** | yes / no — a skill's mechanical steps are only marked for cheap-model dispatch where this is yes |
+| Instructions file wired | PATH (the file holding the line that routes skill requests here) |
 
 ## Teammate setup
 
-*Only if this library is shared.* Each person needs two things that live outside this folder:
+*Only if this library is shared.* Each person needs two things:
 
 1. Discovery — whatever the record above names, pointing at **their** local path.
-2. The routing line in **their** standing instructions file.
+2. The routing line in their standing instructions file.
 
-Neither travels with a clone. If a teammate says "the skill never fires," it's almost always one of these two.
+**Whether these travel with a clone depends on the discovery method.** If discovery is a routing line in an instructions file that is *committed to the shared repo* (`AGENTS.md`, `.cursor/rules/`), both halves clone with it and a teammate needs to do nothing — check that before sending anyone setup steps. If discovery is a symlink into a personal directory (`~/.claude/skills/`), or the instructions file lives outside the repo, neither travels and each person must do both by hand, pointing at their own absolute paths.
+
+If a teammate says "the skill never fires," it is almost always one of those two — or an absolute path in a committed file that only resolves on the machine that wrote it.
